@@ -1,9 +1,9 @@
 package com.ll;
 
+import com.ll.base.App;
+
 public class Main {
     public static void main(String[] args) {
-
-        System.out.printf("Hello and welcome!");
-
+        new App().run();
     }
 }
