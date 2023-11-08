@@ -1,4 +1,4 @@
-package com.ll.domain;
+package com.ll.domain.quote;
 
 
 import lombok.AllArgsConstructor;

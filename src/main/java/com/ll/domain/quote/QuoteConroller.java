@@ -1,5 +1,7 @@
-package com.ll.domain;
+package com.ll.domain.quote;
 
+
+import com.ll.base.Rq;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -7,15 +9,18 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-public class App {
-    Scanner sc;
-    List<Quote> quotesList;
 
-    public App(){
-        sc = new Scanner(System.in);
+
+public class QuoteConroller {
+
+    private Scanner sc;
+    private List<Quote> quotesList;
+
+    public QuoteConroller(Scanner sc){
+        this.sc=sc;
         quotesList = new ArrayList<>();
-        //initTestData();
     }
+
 
     private void initTestData() {
         for(int i=1;i<=10;i++){
@@ -27,40 +32,9 @@ public class App {
         quotesList.add(quoteTmp);
     }
 
-    public void run(){
-        //fileLoad();
-        jsonLoad();
-        while(true){
-            System.out.println("== 명언 앱 ==");
-            System.out.println("명령)");
-            String order = sc.nextLine();
-            Rq rq = new Rq(order);
-
-            switch (rq.getAction()) {
-                case "종료":
-                    //fileSave();
-                    jsonSave();
-                    return;
-                case "등록":
-                    register();
-                    break;
-                case "목록":
-                    list();
-                    break;
-                case "삭제":
-                    delete(rq);
-                    break;
-                case "수정":
-                    modify(rq);
-                    break;
-            }
 
 
-        }
-
-    }
-
-    private void jsonLoad() {
+    public void jsonLoad() {
         try (BufferedReader reader = new BufferedReader(new FileReader("data.json"))) {
             StringBuilder jsonBuilder = new StringBuilder();
             String line;
@@ -85,7 +59,7 @@ public class App {
         }
     }
 
-    private void jsonSave() {
+    public void jsonSave() {
         try (PrintWriter writer = new PrintWriter(new FileWriter("data.json"))) {
             writer.println("[");
             for (int i = 0; i < quotesList.size(); i++) {
@@ -136,7 +110,7 @@ public class App {
         }
     }
 
-    private void register(){
+    public void register(){
         String quote;
         String writer;
         System.out.println("명언 : ");
@@ -145,13 +119,13 @@ public class App {
         writer = sc.nextLine();
         quoteWriter(quote,writer);
     }
-    private void list(){
+    public void list(){
         System.out.println("번호 / 작가 / 명언");
         for(int i=0;i<quotesList.size();i++){
             System.out.println(i + 1+ " / " + quotesList.get(i).getWriter() + " / " + quotesList.get(i).getQuote());
         }
     }
-    private void delete(Rq rq){
+    public void delete(Rq rq){
         int id = rq.getParamAsInt("id", 0);
         if (id == 0) {
             System.out.println("id를 정확히 입력해주세요.");
@@ -163,7 +137,7 @@ public class App {
         }
         quotesList.remove(id-1);
     }
-    private void modify(Rq rq){
+    public void modify(Rq rq){
         int id = rq.getParamAsInt("id", 0);
         if (id == 0) {
             System.out.println("id를 정확히 입력해주세요.");
@@ -181,6 +155,5 @@ public class App {
         quotesList.get(id - 1).setQuote(quote);
         quotesList.get(id - 1).setWriter(writer);
     }
-
 
 }
