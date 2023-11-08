@@ -2,15 +2,28 @@ package com.ll.domain;
 
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 public class App {
     Scanner sc;
-    ArrayList<Quote> quotesList;
+    List<Quote> quotesList;
 
     public App(){
         sc = new Scanner(System.in);
         quotesList = new ArrayList<>();
+        initTestData();
     }
+
+    private void initTestData() {
+        for(int i=1;i<=10;i++){
+            quoteWriter("명언" + i,"작가" + i );
+        }
+    }
+    private void quoteWriter(String quote, String writer){
+        Quote quoteTmp = new Quote(quote,writer);
+        quotesList.add(quoteTmp);
+    }
+
     public void run(){
 
         while(true){
@@ -48,8 +61,7 @@ public class App {
         quote = sc.next();
         System.out.println("작가 : ");
         writer = sc.next();
-        Quote quoteTmp = new Quote(quote,writer);
-        quotesList.add(quoteTmp);
+        quoteWriter(quote,writer);
     }
     private void list(){
         System.out.println("번호 / 작가 / 명언");
@@ -87,5 +99,6 @@ public class App {
         quotesList.get(id - 1).setQuote(quote);
         quotesList.get(id - 1).setWriter(writer);
     }
+
 
 }

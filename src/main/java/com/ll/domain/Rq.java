@@ -1,12 +1,14 @@
 package com.ll.domain;
 
 import com.ll.standard.util.Ut;
+import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Rq {
     String order;
+    @Getter
     String action;
     String queryString;
     Map<String, String> map;
@@ -41,9 +43,7 @@ public class Rq {
 
 
     }
-    String getAction() {
-        return action;
-    }
+
     int getParamAsInt(String paramName, int defaultValue){
         if(map ==null){
             return defaultValue;
