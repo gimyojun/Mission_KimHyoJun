@@ -1,5 +1,7 @@
 package com.ll.domain;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -26,7 +28,8 @@ public class App {
     }
 
     public void run(){
-        fileLoad();
+        //fileLoad();
+        jsonLoad();
         while(true){
             System.out.println("== 명언 앱 ==");
             System.out.println("명령)");
@@ -35,7 +38,8 @@ public class App {
 
             switch (rq.getAction()) {
                 case "종료":
-                    fileSave();
+                    //fileSave();
+                    jsonSave();
                     return;
                 case "등록":
                     register();
@@ -52,6 +56,54 @@ public class App {
             }
 
 
+        }
+
+    }
+
+    private void jsonLoad() {
+        try (BufferedReader reader = new BufferedReader(new FileReader("data.json"))) {
+            StringBuilder jsonBuilder = new StringBuilder();
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                jsonBuilder.append(line);
+            }
+
+            String jsonString = jsonBuilder.toString();
+            JSONArray jsonArray = new JSONArray(jsonString);
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonQuote = jsonArray.getJSONObject(i);
+                String quote = jsonQuote.getString("quote");
+                String writer = jsonQuote.getString("writer");
+                quoteWriter(quote, writer);
+            }
+
+            System.out.println("data.json 파일에서 명언을 로드했습니다.");
+        } catch (IOException e) {
+            System.err.println("data.json 파일 로드 중 오류 발생: " + e.getMessage());
+        }
+    }
+
+    private void jsonSave() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("data.json"))) {
+            writer.println("[");
+            for (int i = 0; i < quotesList.size(); i++) {
+                Quote quote = quotesList.get(i);
+                writer.println("  {");
+                writer.println("    \"quote\": \"" + quote.getQuote() + "\",");
+                writer.println("    \"writer\": \"" + quote.getWriter() + "\"");
+                writer.print("  }");
+                if (i < quotesList.size() - 1) {
+                    writer.println(",");
+                } else {
+                    writer.println();
+                }
+            }
+            writer.println("]");
+            System.out.println("data.json 파일의 내용이 갱신되었습니다.");
+        } catch (IOException e) {
+            System.err.println("data.json 파일 생성 중 오류 발생: " + e.getMessage());
         }
 
     }
@@ -88,9 +140,9 @@ public class App {
         String quote;
         String writer;
         System.out.println("명언 : ");
-        quote = sc.next();
+        quote = sc.nextLine();
         System.out.println("작가 : ");
-        writer = sc.next();
+        writer = sc.nextLine();
         quoteWriter(quote,writer);
     }
     private void list(){
