@@ -1,6 +1,7 @@
 package com.ll.domain;
 
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -11,7 +12,7 @@ public class App {
     public App(){
         sc = new Scanner(System.in);
         quotesList = new ArrayList<>();
-        initTestData();
+        //initTestData();
     }
 
     private void initTestData() {
@@ -25,15 +26,16 @@ public class App {
     }
 
     public void run(){
-
+        fileLoad();
         while(true){
             System.out.println("== 명언 앱 ==");
             System.out.println("명령)");
-            String order = sc.next();
+            String order = sc.nextLine();
             Rq rq = new Rq(order);
 
             switch (rq.getAction()) {
                 case "종료":
+                    fileSave();
                     return;
                 case "등록":
                     register();
@@ -52,6 +54,34 @@ public class App {
 
         }
 
+    }
+
+    private void fileLoad() {
+        try (BufferedReader reader = new BufferedReader(new FileReader("quotes.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\t"); // 탭으로 구분되있다.
+                if (parts.length == 2) {
+                    String quote = parts[0];
+                    String writer = parts[1];
+                    quoteWriter(quote, writer);
+                }
+            }
+            System.out.println("명언리스트 로딩 완료 quotes.txt.");
+        } catch (IOException e) {
+            System.err.println("로딩 중 오류  " + e.getMessage());
+        }
+    }
+
+    private void fileSave() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("quotes.txt"))) {
+            for (Quote quote : quotesList) {
+                writer.println(quote.getQuote() + "\t" + quote.getWriter());
+            }
+            System.out.println("명언 저장 quotes.txt.");
+        } catch (IOException e) {
+            System.err.println("명언 리스트 저장 중 오류: " + e.getMessage());
+        }
     }
 
     private void register(){
@@ -93,9 +123,9 @@ public class App {
             return;
         }
         System.out.println("수정할 명언을 입력해 주세요.");
-        String quote = sc.next();
+        String quote = sc.nextLine();
         System.out.println("수정할 작가명을 입력해 주세요.");
-        String writer = sc.next();
+        String writer = sc.nextLine();
         quotesList.get(id - 1).setQuote(quote);
         quotesList.get(id - 1).setWriter(writer);
     }
