@@ -3,9 +3,6 @@ package com.ll;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-
-import static java.lang.Integer.parseInt;
-
 public class App {
     Scanner sc;
     ArrayList<Quote> quotesList;
@@ -15,21 +12,28 @@ public class App {
         quotesList = new ArrayList<>();
     }
     void run(){
+
         while(true){
             System.out.println("== 명언 앱 ==");
             System.out.println("명령)");
             String order = sc.next();
-            if(order.equals("종료")){
-                break;
-            }else if(order.equals("등록")){
-                register(sc);
-            }else if(order.equals("목록")){
-                list();
-            }else if(order.startsWith("삭제?")){
-                delete(order);
-            }else if(order.startsWith("수정?")){
-                delete(order);
+            Rq rq = new Rq(order);
 
+            switch (rq.getAction()) {
+                case "종료":
+                    return;
+                case "등록":
+                    register();
+                    break;
+                case "목록":
+                    list();
+                    break;
+                case "삭제":
+                    delete(rq);
+                    break;
+                case "수정":
+                    modify(rq);
+                    break;
             }
 
 
@@ -37,7 +41,7 @@ public class App {
 
     }
 
-    void register(Scanner sc){
+    void register(){
         String quote;
         String writer;
         System.out.println("명언 : ");
@@ -53,8 +57,8 @@ public class App {
             System.out.println(i + 1+ " / " + quotesList.get(i).writer + " / " + quotesList.get(i).quote);
         }
     }
-    void delete(String order){
-        int id = getParamAsInt(order,"id",0);
+    void delete(Rq rq){
+        int id = rq.getParamAsInt("id", 0);
         if (id == 0) {
             System.out.println("id를 정확히 입력해주세요.");
             return; // 함수를 끝낸다.
@@ -65,45 +69,23 @@ public class App {
         }
         quotesList.remove(id-1);
     }
-    void modify(String order){
-        int id = getParamAsInt(order,"id",0);
+    void modify(Rq rq){
+        int id = rq.getParamAsInt("id", 0);
         if (id == 0) {
             System.out.println("id를 정확히 입력해주세요.");
             return; // 함수를 끝낸다.
         }
-        quotesList.remove(id-1);
+        int cnt = quotesList.size();
+        if(id > cnt){
+            System.out.println(id + "명언은 존재하지 않습니다. 다시 입력해주세요.");
+            return;
+        }
+        System.out.println("수정할 명언을 입력해 주세요.");
+        String quote = sc.next();
+        System.out.println("수정할 작가명을 입력해 주세요.");
+        String writer = sc.next();
+        quotesList.get(id-1).quote=quote;
+        quotesList.get(id-1).writer=writer;
     }
 
-    int getParamAsInt(String cmd, String paramName, int defaultValue) {
-        String[] cmdBits = cmd.split("\\?", 2);
-        String queryString = cmdBits[1];
-        if(cmdBits[1] == ""){
-            return 0;
-        }
-
-        String[] queryStringBits = queryString.split("&");
-
-        for (int i = 0; i < queryStringBits.length; i++) {
-            String queryParamStr = queryStringBits[i];
-            if(!queryParamStr.contains("=")){
-                return 0;
-            }
-            String[] queryParamStrBits = queryParamStr.split("=", 2);
-
-            String _paramName = queryParamStrBits[0];
-            String paramValue = queryParamStrBits[1];
-
-            if (_paramName.equals(paramName)) {
-                try {
-                    // 문제가 없을 경우
-                    return Integer.parseInt(paramValue);
-                } catch (NumberFormatException e) {
-                    // 문제가 생긴 경우
-                    return defaultValue;
-                }
-            }
-        }
-
-        return defaultValue;
-    }
 }
