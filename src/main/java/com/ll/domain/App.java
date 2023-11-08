@@ -1,4 +1,4 @@
-package com.ll;
+package com.ll.domain;
 
 
 import java.util.ArrayList;
@@ -7,11 +7,11 @@ public class App {
     Scanner sc;
     ArrayList<Quote> quotesList;
 
-    App(){
+    public App(){
         sc = new Scanner(System.in);
         quotesList = new ArrayList<>();
     }
-    void run(){
+    public void run(){
 
         while(true){
             System.out.println("== 명언 앱 ==");
@@ -41,7 +41,7 @@ public class App {
 
     }
 
-    void register(){
+    private void register(){
         String quote;
         String writer;
         System.out.println("명언 : ");
@@ -51,13 +51,13 @@ public class App {
         Quote quoteTmp = new Quote(quote,writer);
         quotesList.add(quoteTmp);
     }
-    void list(){
+    private void list(){
         System.out.println("번호 / 작가 / 명언");
         for(int i=0;i<quotesList.size();i++){
-            System.out.println(i + 1+ " / " + quotesList.get(i).writer + " / " + quotesList.get(i).quote);
+            System.out.println(i + 1+ " / " + quotesList.get(i).getWriter() + " / " + quotesList.get(i).getQuote());
         }
     }
-    void delete(Rq rq){
+    private void delete(Rq rq){
         int id = rq.getParamAsInt("id", 0);
         if (id == 0) {
             System.out.println("id를 정확히 입력해주세요.");
@@ -69,7 +69,7 @@ public class App {
         }
         quotesList.remove(id-1);
     }
-    void modify(Rq rq){
+    private void modify(Rq rq){
         int id = rq.getParamAsInt("id", 0);
         if (id == 0) {
             System.out.println("id를 정확히 입력해주세요.");
@@ -84,8 +84,8 @@ public class App {
         String quote = sc.next();
         System.out.println("수정할 작가명을 입력해 주세요.");
         String writer = sc.next();
-        quotesList.get(id-1).quote=quote;
-        quotesList.get(id-1).writer=writer;
+        quotesList.get(id - 1).setQuote(quote);
+        quotesList.get(id - 1).setWriter(writer);
     }
 
 }

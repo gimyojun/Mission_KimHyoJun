@@ -1,9 +1,9 @@
-package com.ll;
+package com.ll.domain;
+
+import com.ll.standard.util.Ut;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static java.lang.Integer.parseInt;
 
 public class Rq {
     String order;
@@ -50,20 +50,12 @@ public class Rq {
         }
         String paramValue = map.get(paramName);
         if(paramValue!= null){
-            try{
-                return parseInt(paramValue);
-            }catch (NumberFormatException e){
-
-            }
+            return Ut.str.parseInt(paramValue, defaultValue);
         }
         return defaultValue;
 
-
-
-
-
-
-
     }
+
+
 
 }
