@@ -1,27 +1,18 @@
 package com.ll.domain;
 
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@AllArgsConstructor
 public class Quote {
+    @Getter
+    @Setter
     private String quote;
+    @Getter
+    @Setter
     private String writer;
 
-    Quote(String quote, String writer){
-        this.quote=quote;
-        this.writer=writer;
-    }
 
-    public String getQuote() {
-        return quote;
-    }
-
-    public void setQuote(String quote) {
-        this.quote = quote;
-    }
-
-    public String getWriter() {
-        return writer;
-    }
-
-    public void setWriter(String writer) {
-        this.writer = writer;
-    }
 }
